@@ -1,0 +1,44 @@
+{
+  "name": "vk-spy",
+  "version": "0.0.0",
+  "author": "Frys",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "build": "nest build -p tsconfig.build.json",
+    "dev": "cross-env NODE_ENV=dev NODE_OPTIONS=\"--trace-warnings --trace-uncaught\" nest start --watch --debug 9229 --preserveWatchOutput -p tsconfig.dev.json",
+    "start": "cross-env NODE_ENV=production node dist/main",
+    "lint": "eslint \"./src/**/*.ts\" --fix"
+  },
+  "dependencies": {
+    "@nestjs/cli": "^9.5.0",
+    "@nestjs/common": "^9.4.2",
+    "@nestjs/config": "^2.3.2",
+    "@nestjs/core": "^9.4.2",
+    "@nestjs/schedule": "^2.2.2",
+    "@vk-io/authorization": "^1.4.1",
+    "chart.js": "^3.5.1",
+    "chartjs-node-canvas": "^4.1.6",
+    "cross-env": "^7.0.3",
+    "env-var": "^7.3.1",
+    "nestjs-telegraf": "^2.6.3",
+    "nestjs-vk": "^4.5.0",
+    "reflect-metadata": "0.1.13",
+    "rxjs": "7.2.0",
+    "svg2img": "^1.0.0-beta.2",
+    "telegraf": "^4.12.2",
+    "typescript": "^4.9.5",
+    "vk-io": "^4.8.3"
+  },
+  "devDependencies": {
+    "@types/cron": "^2.0.1",
+    "@types/node": "^20.2.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.7",
+    "@typescript-eslint/parser": "^5.59.7",
+    "eslint": "^8.41.0",
+    "eslint-plugin-import": "^2.27.5",
+    "source-map-support": "^0.5.21",
+    "ts-loader": "^9.4.3",
+    "webpack": "^5.84.1"
+  }
+}

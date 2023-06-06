@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "exclude": [
+    "./test/**/*.ts",
+    "./scripts/**/*.ts",
+    "./ecosystem.config.js",
+    "./test*.ts"
+  ],
+  "compilerOptions": {
+    "sourceMap": false,
+    "declaration": false,
+    "noImplicitAny": false,
+  }
+}

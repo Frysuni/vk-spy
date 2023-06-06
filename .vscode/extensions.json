@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "moppitz.vscode-extension-auto-import",
+    "dbaeumer.vscode-eslint",
+    "codezombiech.gitignore",
+    "stringham.move-ts",
+  ]
+}
