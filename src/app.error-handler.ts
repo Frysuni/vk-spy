@@ -1,6 +1,7 @@
 import { inspect } from "node:util";
 import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { TgService } from "./tg/tg.service";
+import { AppUtils } from "./app.utils";
 
 @Injectable()
 export class AppErrorHandlerService implements OnApplicationBootstrap {
@@ -8,6 +9,7 @@ export class AppErrorHandlerService implements OnApplicationBootstrap {
 
   constructor(
     private readonly tgService: TgService,
+    private readonly appUtils: AppUtils,
   ) {}
 
   public onApplicationBootstrap() {
@@ -43,6 +45,6 @@ export class AppErrorHandlerService implements OnApplicationBootstrap {
     const tgMessage = `**Bug catcher**\n\`${type.toUpperCase()}\`\n**${errorMessage}**${stack ? `at\n\`\`\`${stack}\`\`\`` : ''}`;
 
     this.logger.error(consoleMessage);
-    this.tgService.sendToAdmin(tgMessage);
+    this.tgService.sendToAdmin(this.appUtils.escapeMarkdown(tgMessage));
   }
 }
