@@ -15,7 +15,9 @@ export class TgService {
   constructor(
     @InjectBot() private readonly tg: Telegraf,
     private readonly configService: ConfigService<ConfigType<typeof TgConfig>, true>,
-  ) {}
+  ) {
+    this.sendToAdmin('Я запущен.');
+  }
 
   public async start(ctx: TextMessageContext): Promise<string | void> {
     if (ctx.message.from.username !== this.config.adminUsername) return 'Unauthorized.';
