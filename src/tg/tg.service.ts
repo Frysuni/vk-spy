@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { ConfigService, ConfigType } from "@nestjs/config";
 import { InjectBot } from "nestjs-telegraf";
 import { Telegraf } from "telegraf";
@@ -8,14 +8,16 @@ import { TgConfig } from "./tg.config";
 import { TextMessageContext } from "./types/textMessageContext.type";
 
 @Injectable()
-export class TgService {
+export class TgService implements OnApplicationBootstrap {
   private readonly config = this.configService.get('tg', { infer: true });
   private readonly pathToFile = resolve(__dirname, '../', '../', '.adminChatId');
 
   constructor(
     @InjectBot() private readonly tg: Telegraf,
     private readonly configService: ConfigService<ConfigType<typeof TgConfig>, true>,
-  ) {
+  ) {}
+
+  public onApplicationBootstrap() {
     this.sendToAdmin('Я запущен.');
   }
 
