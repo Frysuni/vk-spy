@@ -25,11 +25,11 @@ export class ChartService {
       type: 'line',
       data: {
         datasets: [{
-          label: 'June 9, 2019 is a hint, but you can check the file attributes',
+          label: 'June 9, 2019 is a hint',
           data: [],
           borderColor: 'rgba(75, 192, 192, 1)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          tension: 0.4,
+          tension: 0.2,
           pointBorderWidth: 0,
         }],
       },
@@ -90,7 +90,7 @@ export class ChartService {
     const bigData = new Map<string, number>();
 
     for (let hours = 0; hours < 24; hours++) {
-      for (let minutes = 0; minutes < 60; minutes++) {
+      for (let minutes = 0; minutes < 60; minutes += 30) {
         const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
         bigData.set(formattedTime, 0);
       }
@@ -107,9 +107,13 @@ export class ChartService {
       const online = Boolean(Number(onlineStr));
       const date = new Date(dateStr);
 
-      const hours   = date.getHours()  .toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      const formattedTime = `${hours}:${minutes}`;
+      const hours = date.getHours();
+      const minutes = Math.floor(date.getMinutes() / 30) * 30;
+
+      const formattedHours = hours.toString().padStart(2, '0');
+      const formattedMinutes = minutes.toString().padStart(2, '0');
+
+      const formattedTime = `${formattedHours}:${formattedMinutes}`;
 
       bigData.set(formattedTime, bigData.get(formattedTime)! + (online ? 1 : -1));
     });
