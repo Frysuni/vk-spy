@@ -4,7 +4,6 @@ import * as svg2imgBadLibExport from "svg2img";
 @Injectable()
 export class AppUtils {
   private readonly blacklistedItems = ['track_code', 'last_seen', 'online'];
-  private readonly specialChars = ['\\', '_', '*', '[', ']', '(', ')', '~', '`', '>', '<', '&', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
 
   public findDifferences(obj1: any, obj2: any, prefix = ''): string[] {
     const differences: string[] = [];
@@ -54,22 +53,12 @@ export class AppUtils {
     return Number(result) < 1 ? 'менее минуты' : result;
   }
 
-  public escapeMarkdown(text: string) {
-    this.specialChars.forEach(specialChar =>
-      text = this.replaceAll(text, specialChar, `\\${specialChar}`),
-    );
-    return text;
-  }
-
   public svg2img(image: Buffer): Promise<Buffer> {
     type Format = Exclude<svg2imgBadLibExport.svg2imgOptions['format'], undefined>
 
     return new Promise(res => {
       (svg2imgBadLibExport as any as typeof svg2imgBadLibExport.default)(image.toString(), { format: 'png' as Format }, (_, buffer) => res(buffer));
     });
-  }
-  private replaceAll(input: string, searchValue: string, replaceValue = '') {
-    return input.split(searchValue).join(replaceValue);
   }
 
   private getLabel(number: number, labels: string[]) {

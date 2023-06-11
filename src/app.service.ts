@@ -2,13 +2,13 @@ import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs
 import { resolve } from "node:path";
 import { Injectable } from "@nestjs/common";
 import { Cron, CronExpression  } from "@nestjs/schedule";
-import svg2img from 'svg2img';
 import { TgService } from "./tg/tg.service";
 import { VkService } from "./vk/vk.service";
 import { AppUtils } from "./app.utils";
 import { SuspectUserType } from "./vk/types/suspectUser.type";
 import { TextMessageContext } from "./tg/types/textMessageContext.type";
 import { ChartService } from "./chart/chart.service";
+
 @Injectable()
 export class AppService {
   private readonly pathToData = resolve(__dirname, '../', '.data');
@@ -35,7 +35,7 @@ export class AppService {
     if (differences.length == 0) return;
 
     writeFileSync(this.pathToData, JSON.stringify(actualSuspectUser));
-    this.tgService.sendToAdmin(`Обновление!\n\n${differences.join('\n')}`);
+    this.tgService.sendMessageToAdmin(`Обновление!\n\n${differences.join('\n')}`);
   }
 
   private async collectOnlineInfo(isOnline: boolean) {
@@ -48,12 +48,13 @@ export class AppService {
   }
 
   public async onVkMessage(preparedText: string) {
-    return this.tgService.sendToAdmin(preparedText);
+    return this.tgService.sendMessageToAdmin(preparedText);
   }
 
   public async chartCommand(ctx: TextMessageContext) {
-    const chatId = ctx.chat.id;
-    const { message_id } = await ctx.telegram.sendMessage(ctx.chat.id, this.appUtils.escapeMarkdown('Создаю график, подождите...'));
+    const textMessage = await this.tgService.sendMessageToAdmin('Создаю график, подождите...');
+    if (!textMessage) return;
+    const { message_id } = textMessage;
 
     const startTime = Date.now();
     const { datasetReaded, datasetSize } = this.chartService.createChart(whenDone.bind(this));
@@ -63,22 +64,16 @@ export class AppService {
 
       image = await this.appUtils.svg2img(image);
 
-      ctx.telegram.deleteMessage(chatId, message_id);
+      this.tgService.deleteMessage(message_id);
 
-      ctx.telegram.sendDocument(
-        chatId,
+      this.tgService.sendDocumentToAdmin(
         {
           source: image,
           filename: 'frys-bot-chart.png',
         },
-        {
-          parse_mode: 'MarkdownV2',
-          caption: this.appUtils.escapeMarkdown(
-            `График активности готов.\n` +
-            `Времени затрачено: ${this.appUtils.formatTime((Date.now() - startTime) / 60 / 1000)}\n` +
-            `На основе базы данных за ${this.appUtils.formatTime(datasetSize)}`,
-          ),
-        },
+        `График активности готов.\n` +
+        `Времени затрачено: ${this.appUtils.formatTime((Date.now() - startTime) / 60 / 1000)}\n` +
+        `На основе базы данных за ${this.appUtils.formatTime(datasetSize)}`,
       );
 
     }
@@ -93,12 +88,9 @@ export class AppService {
 
       const estimatedRemainingTime = this.appUtils.formatTime(estimatedRemainingMinutes);
 
-      ctx.telegram.editMessageText(
-        chatId,
+      this.tgService.editMessageText(
         message_id,
-        undefined,
-        this.appUtils.escapeMarkdown(`${readed}/${datasetSize} (${percentage}%)\nОсталось: ${estimatedRemainingTime}`),
-        { parse_mode: 'MarkdownV2' },
+        `${readed}/${datasetSize} (${percentage}%)\nОсталось: ${estimatedRemainingTime}`,
       );
     }, 3000);
 

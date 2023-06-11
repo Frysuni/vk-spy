@@ -45,6 +45,6 @@ export class AppErrorHandlerService implements OnApplicationBootstrap {
     const tgMessage = `**Bug catcher**\n\`${type.toUpperCase()}\`\n**${errorMessage}**${stack ? `at\n\`\`\`${stack}\`\`\`` : ''}`;
 
     this.logger.error(consoleMessage);
-    this.tgService.sendToAdmin(this.appUtils.escapeMarkdown(tgMessage));
+    this.tgService.sendMessageToAdmin(tgMessage);
   }
 }
