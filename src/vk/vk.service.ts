@@ -30,5 +30,7 @@ export class VkService {
       fields: AllUsersFieldsConstant,
     });
     return users.items[0] as SuspectUserType;
+
+    // maybe make a normal functionality. receive videos, wall, photos, likes, etc.
   }
 }
