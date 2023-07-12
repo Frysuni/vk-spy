@@ -3,7 +3,7 @@ import * as svg2imgBadLibExport from "svg2img";
 
 @Injectable()
 export class AppUtils {
-  private readonly blacklistedItems = ['track_code', 'last_seen', 'online'];
+  private readonly blacklistedItems = ['track_code', 'last_seen', 'online', 'followers_count'];
 
   public findDifferences(obj1: any, obj2: any, prefix = ''): string[] {
     const differences: string[] = [];
