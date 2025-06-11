@@ -56,7 +56,11 @@ export class ChartService {
     function dataToChart(bigData: Map<string, number>) {
       const hoursIsEven = (key: string): boolean => Number(key.substring(0, 2)) % 2 === 0;
       const zeroizeMinutes = (key: string): string => key.substring(0, 2) + ':00';
-      const minusOneHourAndZeroizeMinutes = (key: string): string => (Number(key.substring(0, 2)) - 1).toString().padStart(2, '0') + ':00';
+      const minusOneHourAndZeroizeMinutes = (key: string): string => {
+        const hour = Number(key.substring(0, 2));
+        const newHour = (hour - 1 + 24) % 24;
+        return newHour.toString().padStart(2, '0') + ':00';
+      };
 
       configuration.data.labels = Array.from(bigData.keys())
         .map((key) =>
